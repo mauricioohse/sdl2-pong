@@ -21,9 +21,9 @@ bool Game::isRunning = false;
 
 auto& player(manager.addEntity());
 auto& enemy(manager.addEntity());
-auto& ball(manager.addEntity());
 
 auto& label(manager.addEntity());
+auto& labelEnemy(manager.addEntity());
 
 AssetManager* Game::assets = new AssetManager(&manager);
 
@@ -89,8 +89,9 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 
 	SDL_Color white = { 255,255,255,255 };
 	label.addComponent<UILabel>(10, 10, "Test string", "arial", white);
+	labelEnemy.addComponent<UILabel>(10, 50, "Test string", "arial", white);
 
-	assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0), 0, 2, "ball");
+	assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0.2), 0, 2, "ball");
 
 }
 
@@ -121,14 +122,21 @@ void Game::update() // currently doing things here to test, but the scripts will
 {
 	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
 	Vector2D playerPos = player.getComponent<TransformComponent>().position;
+	Vector2D playerVel = player.getComponent<TransformComponent>().velocity;
+	Vector2D enemyPos = enemy.getComponent<TransformComponent>().position;
+	Vector2D enemyVel = enemy.getComponent<TransformComponent>().velocity;
 	cnt++;
 
 	std::stringstream ss;
 
 
 	// text displayed
-	ss << "Player position: " << playerPos;
-	label.getComponent<UILabel>().SetLabelText(ss.str(), "arial"); // there is a leaking problem here
+	ss << "Player pos/speed: " << playerPos << "/" << playerVel;
+	label.getComponent<UILabel>().SetLabelText(ss.str(), "arial");
+
+	std::stringstream ss2;
+	ss2 << "Enemy pos/speed: " << enemyPos << "/" << enemyVel;
+	labelEnemy.getComponent<UILabel>().SetLabelText(ss2.str(), "arial");
 
 	manager.refresh();
 	manager.update();
@@ -156,6 +164,14 @@ void Game::update() // currently doing things here to test, but the scripts will
 			//todo: clear this mess. this should be overloaded - on vector2d, not sure why it didnt work
 			p->getComponent<TransformComponent>().velocity = -p->getComponent<TransformComponent>().velocity;
 		}
+
+		// oponent follow the ball
+		if (p->getComponent<TransformComponent>().position.y - 64 > enemy.getComponent<TransformComponent>().position.y)
+			enemy.getComponent<TransformComponent>().velocity.y = .2;
+		else if (p->getComponent<TransformComponent>().position.y - 64 < enemy.getComponent<TransformComponent>().position.y)
+			enemy.getComponent<TransformComponent>().velocity.y = -.2;
+		else
+			enemy.getComponent<TransformComponent>().velocity.y = 0;
 	}
 
 	Vector2D pVel = player.getComponent<TransformComponent>().velocity;
@@ -167,6 +183,9 @@ void Game::update() // currently doing things here to test, but the scripts will
 		player.getComponent<TransformComponent>().position.y = 640;
 	//camera.x = player.getComponent<TransformComponent>().position.x - 400;
 	//camera.y = player.getComponent<TransformComponent>().position.y - 320;
+
+	
+	
 
 	if (camera.x < 0)
 		camera.x = 0;
@@ -219,6 +238,7 @@ void Game::render()
 	}
 
 	label.draw();
+	labelEnemy.draw();
 
 	SDL_RenderPresent(renderer);
 }

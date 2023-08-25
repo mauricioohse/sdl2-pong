@@ -13,7 +13,7 @@ void AssetManager::CreateProjectiles(Vector2D pos, Vector2D vel, int range, int 
 	projectile.addComponent<TransformComponent>(pos.x, pos.y, 32, 32, 1);
 	projectile.addComponent<SpriteComponent > (id, false);
 	projectile.addComponent<ProjectileComponent>(range, speed, vel);
-	projectile.addComponent<ColliderComponent>("ball");
+	projectile.addComponent<ColliderComponent>(id);
 	projectile.addGroup(Game::GROUP_PROJECTILES);
 }
 
