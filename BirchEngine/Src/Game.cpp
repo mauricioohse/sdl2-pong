@@ -60,11 +60,11 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 		std::cout << "Error : SDL_TTF" << std::endl;
 	}
 
+	// these are the assets that can be loaded by their string id
 	assets->AddTexture("terrain", "assets/terrain_ss.png");
 	assets->AddTexture("enemy", "assets/terrain_ss.png");
 	assets->AddTexture("player", "assets/bar_sprites.png");
 	assets->AddTexture("ball", "assets/fireball.png");
-
 	assets->AddFont("arial", "assets/arial.ttf", 16);
 
 	map = new Map("terrain", 3, 32);
@@ -73,13 +73,13 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 
 	map->LoadMap("assets/map.map", 25, 20);
 
-	player.addComponent<TransformComponent>(0, 320 + 64, 64, 16, 2);
+	player.addComponent<TransformComponent>(0, 320 - 64, 64, 16, 2);
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
 	player.addGroup(GROUP_PLAYERS);
 
-	enemy.addComponent<TransformComponent>(800 - 32, 320 + -64, 64, 16, 2);
+	enemy.addComponent<TransformComponent>(800 - 32, 320 - 64, 64, 16, 2);
 	enemy.addComponent<SpriteComponent>("player", true);
 	//enemy.addComponent<EnemyController>();
 	enemy.addComponent<ColliderComponent>("player");
@@ -128,7 +128,7 @@ void Game::update() // currently doing things here to test, but the scripts will
 
 	// text displayed
 	ss << "Player position: " << playerPos;
-	label.getComponent<UILabel>().SetLabelText(ss.str(), "arial");
+	label.getComponent<UILabel>().SetLabelText(ss.str(), "arial"); // there is a leaking problem here
 
 	manager.refresh();
 	manager.update();
