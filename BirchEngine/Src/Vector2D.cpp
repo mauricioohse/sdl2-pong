@@ -66,6 +66,11 @@ Vector2D& operator/(Vector2D& v1, const Vector2D& v2)
 	return v1.Divide(v2);
 }
 
+Vector2D Vector2D::operator-()
+{
+	return Vector2D(-x, -y);
+}
+
 Vector2D& Vector2D::operator+=(const Vector2D& vec)
 {
 	return this->Add(vec);

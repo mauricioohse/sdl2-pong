@@ -40,31 +40,31 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 
 	mapFile.ignore();
 
-	for (int y = 0; y < sizeY; y++)
-	{
-		for (int x = 0; x < sizeX; x++)
-		{
-			mapFile.get(c);
-			if (c == '2') // 21 is the full water texture -> that is because I am using the same map of collision as the tilemap for ease
-			{ // first char is 2
-				mapFile.get(c);
-				if (c == '1')
-				{
-					auto& tcol(manager.addEntity());
-					tcol.addComponent<ColliderComponent>("terrain", x * scaledSize, y * scaledSize, scaledSize);
-					tcol.addGroup(Game::GROUP_COLLIDERS);
-					std::cout << "COLLISION TILE ADDED!" << std::endl;
-				}
-				mapFile.ignore();
-			}
-			else
-			{	// ignores twice otherwise
-				mapFile.ignore();
-				mapFile.ignore();
-				std::cout << "COLLISION TILE IGNORED!" << std::endl;
-			}
-		}
-	}
+	//for (int y = 0; y < sizeY; y++)
+	//{
+	//	for (int x = 0; x < sizeX; x++)
+	//	{
+	//		mapFile.get(c);
+	//		if (c == '2') // 21 is the full water texture -> that is because I am using the same map of collision as the tilemap for ease
+	//		{ // first char is 2
+	//			mapFile.get(c);
+	//			if (c == '1')
+	//			{
+	//				auto& tcol(manager.addEntity());
+	//				tcol.addComponent<ColliderComponent>("terrain", x * scaledSize, y * scaledSize, scaledSize);
+	//				tcol.addGroup(Game::GROUP_COLLIDERS);
+	//				std::cout << "COLLISION TILE ADDED!" << std::endl;
+	//			}
+	//			mapFile.ignore();
+	//		}
+	//		else
+	//		{	// ignores twice otherwise
+	//			mapFile.ignore();
+	//			mapFile.ignore();
+	//			std::cout << "COLLISION TILE IGNORED!" << std::endl;
+	//		}
+	//	}
+	//}
 
 	mapFile.close();
 }

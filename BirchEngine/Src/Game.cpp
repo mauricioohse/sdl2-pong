@@ -20,6 +20,8 @@ SDL_Rect Game::camera = { 0, 0, 800, 640 };
 bool Game::isRunning = false;
 
 auto& player(manager.addEntity());
+auto& enemy(manager.addEntity());
+auto& ball(manager.addEntity());
 
 auto& label(manager.addEntity());
 
@@ -59,8 +61,9 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 	}
 
 	assets->AddTexture("terrain", "assets/terrain_ss.png");
-	assets->AddTexture("player", "assets/player_anims.png");
-	assets->AddTexture("projectile", "assets/fireball.png");
+	assets->AddTexture("enemy", "assets/terrain_ss.png");
+	assets->AddTexture("player", "assets/bar_sprites.png");
+	assets->AddTexture("ball", "assets/fireball.png");
 
 	assets->AddFont("arial", "assets/arial.ttf", 16);
 
@@ -70,26 +73,31 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 
 	map->LoadMap("assets/map.map", 25, 20);
 
-	player.addComponent<TransformComponent>(800, 640,32,32,2);
+	player.addComponent<TransformComponent>(0, 320 + 64, 64, 16, 2);
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
 	player.addGroup(GROUP_PLAYERS);
 
-	SDL_Color white = { 255,255,255,255 };
+	enemy.addComponent<TransformComponent>(800 - 32, 320 + -64, 64, 16, 2);
+	enemy.addComponent<SpriteComponent>("player", true);
+	//enemy.addComponent<EnemyController>();
+	enemy.addComponent<ColliderComponent>("player");
+	enemy.addGroup(GROUP_ENEMIES);
 
+
+
+	SDL_Color white = { 255,255,255,255 };
 	label.addComponent<UILabel>(10, 10, "Test string", "arial", white);
 
-	assets->CreateProjectiles(Vector2D(600, 600), Vector2D(1, 0), 200, 2, "projectile");
-	assets->CreateProjectiles(Vector2D(500, 600), Vector2D(1, 0), 200, 2, "projectile");
-	assets->CreateProjectiles(Vector2D(600, 500), Vector2D(1, 0), 200, 2, "projectile");
-	assets->CreateProjectiles(Vector2D(600, 400), Vector2D(1, 0), 200, 2, "projectile");
+	assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0), 0, 2, "ball");
 
 }
 
 // list of entities per group
 auto& tiles(manager.getGroup(Game::GROUP_MAP));
 auto& players(manager.getGroup(Game::GROUP_PLAYERS));
+auto& enemies(manager.getGroup(Game::GROUP_ENEMIES));
 auto& colliders(manager.getGroup(Game::GROUP_COLLIDERS));
 auto& projectiles(manager.getGroup(Game::GROUP_PROJECTILES));
 
@@ -117,8 +125,9 @@ void Game::update() // currently doing things here to test, but the scripts will
 
 	std::stringstream ss;
 
-	ss << "Player position: " << playerPos;
 
+	// text displayed
+	ss << "Player position: " << playerPos;
 	label.getComponent<UILabel>().SetLabelText(ss.str(), "arial");
 
 	manager.refresh();
@@ -138,16 +147,26 @@ void Game::update() // currently doing things here to test, but the scripts will
 	{
 		if (Collision::AABB(player.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))
 		{
-			p->destroy();
+			//todo: clear this mess. this should be overloaded - on vector2d, not sure why it didnt work
+			p->getComponent<TransformComponent>().velocity = -p->getComponent<TransformComponent>().velocity;
+		}
+
+		if (Collision::AABB(enemy.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))
+		{
+			//todo: clear this mess. this should be overloaded - on vector2d, not sure why it didnt work
+			p->getComponent<TransformComponent>().velocity = -p->getComponent<TransformComponent>().velocity;
 		}
 	}
 
 	Vector2D pVel = player.getComponent<TransformComponent>().velocity;
 	int pSpeed = player.getComponent<TransformComponent>().speed;
 
-
-	camera.x = player.getComponent<TransformComponent>().position.x - 400;
-	camera.y = player.getComponent<TransformComponent>().position.y - 320;
+	if (player.getComponent<TransformComponent>().position.y <= 0)
+		player.getComponent<TransformComponent>().position.y = 0;
+	if (player.getComponent<TransformComponent>().position.y >= 640 - 128)
+		player.getComponent<TransformComponent>().position.y = 640;
+	//camera.x = player.getComponent<TransformComponent>().position.x - 400;
+	//camera.y = player.getComponent<TransformComponent>().position.y - 320;
 
 	if (camera.x < 0)
 		camera.x = 0;
@@ -173,8 +192,6 @@ void Game::update() // currently doing things here to test, but the scripts will
 void Game::render()
 {
 	SDL_RenderClear(renderer);
-
-	// manager.draw();
 	
 	for (auto& t : tiles)
 	{
@@ -194,6 +211,11 @@ void Game::render()
 	for (auto& p : projectiles)
 	{
 		p->draw();
+	}
+
+	for (auto& e : enemies)
+	{
+		e->draw();
 	}
 
 	label.draw();

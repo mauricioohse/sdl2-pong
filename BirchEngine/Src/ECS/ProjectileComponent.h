@@ -23,9 +23,10 @@ public:
 	{
 		distance += speed;
 
-		if (distance > range)
+		if (distance > range && range!=0)
 		{
 			entity->destroy();
+			std::cout << "Ball destroyed bcs of range!" << std::endl;
 		}
 		else if (transform->position.x > Game::camera.x + Game::camera.w ||// verifies if outside of screen
 			transform->position.x < Game::camera.x ||
@@ -34,6 +35,7 @@ public:
 			)
 		{
 			entity->destroy();
+			std::cout << "Ball destroyed bcs of out of bounds!" << std::endl;
 		}
 	}
 
