@@ -161,8 +161,7 @@ void Game::update() // currently doing things here to test, but the scripts will
 
 		if (Collision::AABB(enemy.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))
 		{
-			//todo: clear this mess. this should be overloaded - on vector2d, not sure why it didnt work
-			p->getComponent<TransformComponent>().velocity = -p->getComponent<TransformComponent>().velocity;
+			p->getComponent<ProjectileComponent>().DoHorizontalCollision(enemy.getComponent<TransformComponent>().position.y);
 		}
 
 		// oponent follow the ball

@@ -50,6 +50,10 @@ public:
 
 	void DoHorizontalCollision(float YPosition)
 	{
+
+		std::cout << "DoHorizontalCollision, Ybar: " << YPosition << " yvelocity: " << transform->velocity.y <<
+			" plus: " << ((transform->position.y - YPosition - 64) / Y_VELOCITY_FACTOR) << std::endl;
+
 		if (transform->velocity.x < 0) // ball going to the left
 			transform->velocity.x = -transform->velocity.x + X_VELOCITY_INCREASE_PER_HIT;
 		else // ball going to the right
