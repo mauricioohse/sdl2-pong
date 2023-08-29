@@ -64,8 +64,8 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 	assets->AddTexture("terrain", "assets/terrain_ss.png");
 	assets->AddTexture("enemy", "assets/terrain_ss.png");
 	assets->AddTexture("player", "assets/bar_sprites.png");
-	assets->AddTexture("ball", "assets/fireball.png");
 	assets->AddFont("arial", "assets/arial.ttf", 16);
+	assets->AddTexture("ball", "assets/fireball.png");
 
 	map = new Map("terrain", 3, 32);
 
@@ -172,6 +172,10 @@ void Game::update() // currently doing things here to test, but the scripts will
 			enemy.getComponent<TransformComponent>().velocity.y = -.8;
 		else
 			enemy.getComponent<TransformComponent>().velocity.y = 0;
+
+		// upper and lower out of bounds collision handling
+
+
 	}
 
 	Vector2D pVel = player.getComponent<TransformComponent>().velocity;

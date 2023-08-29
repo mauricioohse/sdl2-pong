@@ -3,6 +3,7 @@
 #include "ECS.h"
 #include "Components.h"
 #include "../Vector2D.h"
+#include "AssetManager.h"
 
 class ProjectileComponent : public Component
 {
@@ -23,19 +24,27 @@ public:
 	{
 		distance += speed;
 
-		if (distance > range && range!=0)
+		if (distance > range && range!=0) // this range stuff is not needed for pong - will be deprecated eventually
 		{
 			entity->destroy();
 			std::cout << "Ball destroyed bcs of range!" << std::endl;
 		}
-		else if (transform->position.x > Game::camera.x + Game::camera.w ||// verifies if outside of screen
-			transform->position.x < Game::camera.x ||
-			transform->position.y > Game::camera.y + Game::camera.h ||
-			transform->position.y < Game::camera.y
-			)
+		else if (transform->position.y > Game::camera.y + Game::camera.h - 32|| // 32 == ball_height
+			transform->position.y < Game::camera.y)
+		{	// ball at lower or upper bound
+			transform->velocity.y = -transform->velocity.y;
+		}
+		else if (transform->position.x > Game::camera.x + Game::camera.w)
+		{	// right bound > player scored
+			entity->destroy();
+			std::cout << "Player scored" << std::endl;
+			Game::assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0.2), 0, 2, "ball");
+		}
+		else if (transform->position.x < Game::camera.x)
 		{
 			entity->destroy();
-			std::cout << "Ball destroyed bcs of out of bounds!" << std::endl;
+			std::cout << "Enemy scored" << std::endl;
+			Game::assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0.2), 0, 2, "ball");
 		}
 	}
 
