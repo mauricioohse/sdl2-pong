@@ -47,14 +47,15 @@ public:
 			transform->velocity.x = -transform->velocity.x - X_VELOCITY_INCREASE_PER_HIT;
 
 		// vertical
-		transform->velocity.y += -(YPosition-transform->position.y) / 256;
+		transform->velocity.y += (transform->position.y - YPosition - 64) / Y_VELOCITY_FACTOR;
 	}
 
 
 private:
 
 	TransformComponent* transform;
-	const float X_VELOCITY_INCREASE_PER_HIT = .2;
+	const float X_VELOCITY_INCREASE_PER_HIT = .3;
+	const int Y_VELOCITY_FACTOR = 64; // makes the velocity change on y be up to 2 units (128/64)
 	int range = 0;
 	int speed = 0;
 	int distance = 0;
