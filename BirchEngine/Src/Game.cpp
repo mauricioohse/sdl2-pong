@@ -89,7 +89,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 
 	SDL_Color white = { 255,255,255,255 };
 	label.addComponent<UILabel>(10, 10, "Test string", "arial", white);
-	labelEnemy.addComponent<UILabel>(10, 50, "Test string", "arial", white);
+	labelEnemy.addComponent<UILabel>(10, 26, "Test string", "arial", white);
 
 	assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0.2), 0, 2, "ball");
 
@@ -150,13 +150,13 @@ void Game::update() // currently doing things here to test, but the scripts will
 		}
 	}
 
-
+	// projectile logic
 	for (auto& p : projectiles)
 	{
 		if (Collision::AABB(player.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))
 		{
-			//todo: clear this mess. this should be overloaded - on vector2d, not sure why it didnt work
-			p->getComponent<TransformComponent>().velocity = -p->getComponent<TransformComponent>().velocity;
+			p->getComponent<ProjectileComponent>().DoHorizontalCollision(player.getComponent<TransformComponent>().position.y);
+			//p->getComponent<TransformComponent>().velocity = -p->getComponent<TransformComponent>().velocity;
 		}
 
 		if (Collision::AABB(enemy.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))
@@ -167,9 +167,9 @@ void Game::update() // currently doing things here to test, but the scripts will
 
 		// oponent follow the ball
 		if (p->getComponent<TransformComponent>().position.y - 64 > enemy.getComponent<TransformComponent>().position.y)
-			enemy.getComponent<TransformComponent>().velocity.y = .2;
+			enemy.getComponent<TransformComponent>().velocity.y = .8;
 		else if (p->getComponent<TransformComponent>().position.y - 64 < enemy.getComponent<TransformComponent>().position.y)
-			enemy.getComponent<TransformComponent>().velocity.y = -.2;
+			enemy.getComponent<TransformComponent>().velocity.y = -.8;
 		else
 			enemy.getComponent<TransformComponent>().velocity.y = 0;
 	}
@@ -180,7 +180,7 @@ void Game::update() // currently doing things here to test, but the scripts will
 	if (player.getComponent<TransformComponent>().position.y <= 0)
 		player.getComponent<TransformComponent>().position.y = 0;
 	if (player.getComponent<TransformComponent>().position.y >= 640 - 128)
-		player.getComponent<TransformComponent>().position.y = 640;
+		player.getComponent<TransformComponent>().position.y = 640-128;
 	//camera.x = player.getComponent<TransformComponent>().position.x - 400;
 	//camera.y = player.getComponent<TransformComponent>().position.y - 320;
 

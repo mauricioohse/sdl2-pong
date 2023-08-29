@@ -39,10 +39,22 @@ public:
 		}
 	}
 
+	void DoHorizontalCollision(float YPosition)
+	{
+		if (transform->velocity.x < 0) // ball going to the left
+			transform->velocity.x = -transform->velocity.x + X_VELOCITY_INCREASE_PER_HIT;
+		else // ball going to the right
+			transform->velocity.x = -transform->velocity.x - X_VELOCITY_INCREASE_PER_HIT;
+
+		// vertical
+		transform->velocity.y += -(YPosition-transform->position.y) / 256;
+	}
+
+
 private:
 
 	TransformComponent* transform;
-
+	const float X_VELOCITY_INCREASE_PER_HIT = .2;
 	int range = 0;
 	int speed = 0;
 	int distance = 0;
