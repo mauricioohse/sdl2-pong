@@ -12,9 +12,11 @@ void AssetManager::CreateProjectiles(Vector2D pos, Vector2D vel, int range, int 
 	auto& projectile(manager->addEntity());
 	projectile.addComponent<TransformComponent>(pos.x, pos.y, 32, 32, 1);
 	projectile.addComponent<SpriteComponent > (id, false);
-	projectile.addComponent<ProjectileComponent>(range, speed, vel);
 	projectile.addComponent<ColliderComponent>(id);
 	projectile.addGroup(Game::GROUP_PROJECTILES);
+	
+	Vector2D randInitVel = ProjectileComponent::GenInitVelocity();
+	projectile.addComponent<ProjectileComponent>(range, speed, randInitVel);
 }
 
 void AssetManager::AddTexture(std::string id, const char* path)

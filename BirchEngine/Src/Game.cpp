@@ -156,7 +156,6 @@ void Game::update() // currently doing things here to test, but the scripts will
 		if (Collision::AABB(player.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))
 		{
 			p->getComponent<ProjectileComponent>().DoHorizontalCollision(player.getComponent<TransformComponent>().position.y);
-			//p->getComponent<TransformComponent>().velocity = -p->getComponent<TransformComponent>().velocity;
 		}
 
 		if (Collision::AABB(enemy.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))

@@ -63,6 +63,16 @@ public:
 		transform->velocity.y += (transform->position.y - YPosition - 64) / Y_VELOCITY_FACTOR;
 	}
 
+	static Vector2D GenInitVelocity()
+	{
+		while (true)
+		{
+			Vector2D randInitVel = Vector2D((float)(rand() % 150) / 100, (float)(rand() % 250 - 125) / 100);
+			if (randInitVel.x > 0.5)
+				return randInitVel;
+		}
+	}
+
 
 private:
 
