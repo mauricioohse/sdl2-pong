@@ -24,6 +24,10 @@ auto& enemy(manager.addEntity());
 
 auto& label(manager.addEntity());
 auto& labelEnemy(manager.addEntity());
+auto& labelPoints(manager.addEntity());
+
+int Game::playerPoints = 0;
+int Game::enemyPoints = 0;
 
 AssetManager* Game::assets = new AssetManager(&manager);
 
@@ -90,6 +94,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 	SDL_Color white = { 255,255,255,255 };
 	label.addComponent<UILabel>(10, 10, "Test string", "arial", white);
 	labelEnemy.addComponent<UILabel>(10, 26, "Test string", "arial", white);
+	labelPoints.addComponent<UILabel>(10, 42, "Test string", "arial", white);
 
 	assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0.2), 0, 2, "ball");
 
@@ -137,6 +142,10 @@ void Game::update() // currently doing things here to test, but the scripts will
 	std::stringstream ss2;
 	ss2 << "Enemy pos/speed: " << enemyPos << "/" << enemyVel;
 	labelEnemy.getComponent<UILabel>().SetLabelText(ss2.str(), "arial");
+
+	std::stringstream pointSs;
+	pointSs << "Player: " << playerPoints << "/" << "Opponent: " << enemyPoints;
+	labelPoints.getComponent<UILabel>().SetLabelText(pointSs.str(), "arial");
 
 	manager.refresh();
 	manager.update();
@@ -241,6 +250,7 @@ void Game::render()
 
 	label.draw();
 	labelEnemy.draw();
+	labelPoints.draw();
 
 	SDL_RenderPresent(renderer);
 }

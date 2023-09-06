@@ -4,6 +4,7 @@
 #include "Components.h"
 #include "../Vector2D.h"
 #include "AssetManager.h"
+#include "../Game.h"
 
 class ProjectileComponent : public Component
 {
@@ -39,12 +40,14 @@ public:
 			entity->destroy();
 			std::cout << "Player scored" << std::endl;
 			Game::assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0.2), 0, 2, "ball");
+			Game::playerPoints++;
 		}
 		else if (transform->position.x < Game::camera.x)
 		{
 			entity->destroy();
 			std::cout << "Enemy scored" << std::endl;
 			Game::assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0.2), 0, 2, "ball");
+			Game::enemyPoints++;
 		}
 	}
 
