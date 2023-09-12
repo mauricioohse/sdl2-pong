@@ -147,8 +147,8 @@ void Game::update() // currently doing things here to test, but the scripts will
 	pointSs << "Player: " << playerPoints << "/" << "Opponent: " << enemyPoints;
 	labelPoints.getComponent<UILabel>().SetLabelText(pointSs.str(), "arial");
 
-	manager.refresh();
-	manager.update();
+	manager.update();	// run every entity's update function
+	manager.refresh();	// remove all entities that are not active
 
 	for (auto& c : colliders)
 	{
@@ -172,16 +172,19 @@ void Game::update() // currently doing things here to test, but the scripts will
 			p->getComponent<ProjectileComponent>().DoHorizontalCollision(enemy.getComponent<TransformComponent>().position.y);
 		}
 
-		// oponent follow the ball
-		if (p->getComponent<TransformComponent>().position.y - 64 > enemy.getComponent<TransformComponent>().position.y)
+		// enemy follow the ball
+		// ball is at the same height that the enemy > BallY> enemyY && BallY < enemyY + barHeight
+		if (p->getComponent<TransformComponent>().position.y > enemy.getComponent<TransformComponent>().position.y &&
+			p->getComponent<TransformComponent>().position.y < enemy.getComponent<TransformComponent>().position.y + 64)
+		{
+			enemy.getComponent<TransformComponent>().velocity.y = fmin(.8, p->getComponent<TransformComponent>().velocity.y);
+		}
+		else if (p->getComponent<TransformComponent>().position.y - 64 > enemy.getComponent<TransformComponent>().position.y) // ball is below enemy
 			enemy.getComponent<TransformComponent>().velocity.y = .8;
-		else if (p->getComponent<TransformComponent>().position.y - 64 < enemy.getComponent<TransformComponent>().position.y)
+		else if (p->getComponent<TransformComponent>().position.y - 64 < enemy.getComponent<TransformComponent>().position.y) // ball is above enemy
 			enemy.getComponent<TransformComponent>().velocity.y = -.8;
 		else
 			enemy.getComponent<TransformComponent>().velocity.y = 0;
-
-		// upper and lower out of bounds collision handling
-
 
 	}
 
