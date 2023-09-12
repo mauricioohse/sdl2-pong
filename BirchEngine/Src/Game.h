@@ -4,6 +4,7 @@
 #include "SDL_image.h"
 #include <iostream>
 #include <vector>
+#include "Types.h"
 
 class ColliderComponent;
 class AssetManager;
@@ -22,7 +23,7 @@ public:
 	void render();
 	void clean();
 
-	static void AddTile(int srcX, int srcY, int xpos, int ypos);
+	//static void AddTile(int srcX, int srcY, int xpos, int ypos);
 	static SDL_Renderer* renderer;
 	static SDL_Event event;
 	static bool isRunning;

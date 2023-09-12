@@ -9,7 +9,7 @@ public:
 	~Map();
 
 	void LoadMap(std::string path, int sizeX, int sizeY);
-	void Map::AddTile(int srcX, int srcY, int xpos, int ypos);
+	//void Map::AddTile(int srcX, int srcY, int xpos, int ypos);
 
 private:
 	std::string textID;

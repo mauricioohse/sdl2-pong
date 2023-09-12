@@ -75,17 +75,16 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 
 	// ecs implementation
 
-	map->LoadMap("assets/map.map", 25, 20);
+	//map->LoadMap("assets/map.map", 25, 20);
 
-	player.addComponent<TransformComponent>(0, 320 - 64, 64, 16, 2);
+	player.addComponent<TransformComponent>(0, SCREEN_HEIGHT/2 - PADDLE_HEIGHT, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_SCALE);
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
 	player.addGroup(GROUP_PLAYERS);
 
-	enemy.addComponent<TransformComponent>(800 - 32, 320 - 64, 64, 16, 2);
+	enemy.addComponent<TransformComponent>(SCREEN_WIDTH - PADDLE_WIDTH_SCALED, SCREEN_HEIGHT/2 - PADDLE_HEIGHT, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_SCALE);
 	enemy.addComponent<SpriteComponent>("player", true);
-	//enemy.addComponent<EnemyController>();
 	enemy.addComponent<ColliderComponent>("player");
 	enemy.addGroup(GROUP_ENEMIES);
 
@@ -96,12 +95,11 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 	labelEnemy.addComponent<UILabel>(10, 26, "Test string", "arial", white);
 	labelPoints.addComponent<UILabel>(10, 42, "Test string", "arial", white);
 
-	assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0.2), 0, 2, "ball");
+	assets->CreateProjectiles(Vector2D(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), Vector2D(-1, 0.2), 0, 2, "ball");
 
 }
 
 // list of entities per group
-auto& tiles(manager.getGroup(Game::GROUP_MAP));
 auto& players(manager.getGroup(Game::GROUP_PLAYERS));
 auto& enemies(manager.getGroup(Game::GROUP_ENEMIES));
 auto& colliders(manager.getGroup(Game::GROUP_COLLIDERS));
@@ -172,7 +170,7 @@ void Game::update() // currently doing things here to test, but the scripts will
 			p->getComponent<ProjectileComponent>().DoHorizontalCollision(enemy.getComponent<TransformComponent>().position.y);
 		}
 
-		// enemy follow the ball
+		// enemy follow the ball logic
 		// ball is at the same height that the enemy > BallY> enemyY && BallY < enemyY + barHeight
 		if (p->getComponent<TransformComponent>().position.y > enemy.getComponent<TransformComponent>().position.y &&
 			p->getComponent<TransformComponent>().position.y < enemy.getComponent<TransformComponent>().position.y + 64)
@@ -211,12 +209,12 @@ void Game::update() // currently doing things here to test, but the scripts will
 		camera.y = camera.w;
 
 
-	for (auto t : tiles)
-	{
-		t->getComponent<TileComponent>().destRect.x += -(pVel.x * pSpeed);
-		t->getComponent<TileComponent>().destRect.y += -(pVel.y * pSpeed);
+	//for (auto t : tiles)
+	//{
+	//	t->getComponent<TileComponent>().destRect.x += -(pVel.x * pSpeed);
+	//	t->getComponent<TileComponent>().destRect.y += -(pVel.y * pSpeed);
 
-	}
+	//}
 
 
 	//std::cout << cnt << std::endl;
@@ -226,11 +224,6 @@ void Game::render()
 {
 	SDL_RenderClear(renderer);
 	
-	for (auto& t : tiles)
-	{
-		t->draw();
-	}
-
 	for (auto& p : players)
 	{
 		p->draw();
