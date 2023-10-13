@@ -11,13 +11,22 @@ AssetManager::~AssetManager()
 void AssetManager::CreateProjectiles(Vector2D pos, Vector2D vel, int range, int speed, std::string id)
 {
 	auto& projectile(manager->addEntity());
-	projectile.addComponent<TransformComponent>(pos.x, pos.y, PADDLE_HEIGHT/2, PADDLE_HEIGHT/2, 1);
+	projectile.addComponent<TransformComponent>(pos.x, pos.y, BALL_WIDTH, BALL_WIDTH, 1);
 	projectile.addComponent<SpriteComponent > (id, false);
 	projectile.addComponent<ColliderComponent>(id);
 	
 	Vector2D randInitVel = ProjectileComponent::GenInitVelocity();
 	projectile.addComponent<ProjectileComponent>(range, speed, randInitVel);
 	projectile.addGroup(Game::GROUP_PROJECTILES);
+}
+
+void AssetManager::CreateTrail(Vector2D pos, int timeToDelete, std::string id)
+{
+	auto& trail(manager->addEntity());
+	trail.addComponent<TransformComponent>(pos.x, pos.y, BALL_WIDTH, BALL_WIDTH, 1);
+	trail.addComponent<SpriteComponent>(id);
+	trail.addComponent<TrailComponent>(timeToDelete);
+	trail.addGroup(Game::GROUP_SPRITES);
 }
 
 void AssetManager::AddTexture(std::string id, const char* path)

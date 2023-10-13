@@ -25,7 +25,7 @@ public:
 	{
 		distance += speed;
 
-		if (distance > range && range!=0) // this range stuff is not needed for pong - will be deprecated eventually
+		if (distance > range && range>0) // this range stuff is not needed for pong - will be deprecated eventually
 		{
 			entity->destroy();
 			std::cout << "Ball destroyed bcs of range!" << std::endl;
@@ -49,6 +49,7 @@ public:
 			Game::assets->CreateProjectiles(Vector2D(400, 320), Vector2D(-1, 0.2), 0, 2, "ball");
 			Game::enemyPoints++;
 		}
+
 	}
 
 	void DoHorizontalCollision(float YPosition)
@@ -85,5 +86,6 @@ private:
 	int range = 0;
 	int speed = 0;
 	int distance = 0;
+	int frameCounter = 0;
 	Vector2D velocity;
 };

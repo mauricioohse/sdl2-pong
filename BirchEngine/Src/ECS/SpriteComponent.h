@@ -17,6 +17,7 @@ private:
 	bool animated = false;
 	int frames = 0;
 	int speed = 100;
+	bool delete_entity_flag = false;
 
 public:
 
@@ -46,6 +47,7 @@ public:
 
 	~SpriteComponent()
 	{
+
 	}
 
 	void init() override
@@ -73,6 +75,7 @@ public:
 		destRect.y = static_cast<int>(transform->position.y) - Game::camera.y;
 		destRect.w = transform->width * transform->scale;
 		destRect.h = transform->height * transform->scale;
+
 	}
 
 	void draw() override

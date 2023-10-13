@@ -17,6 +17,8 @@ public:
 	// game objects
 	void CreateProjectiles(Vector2D pos, Vector2D vel, int range, int speed, std::string id);
 
+	void CreateTrail(Vector2D pos, int timeToDelete, std::string id);
+
 	// texture management
 	void AddTexture(std::string id, const char* path);
 	SDL_Texture* GetTexture(std::string id);

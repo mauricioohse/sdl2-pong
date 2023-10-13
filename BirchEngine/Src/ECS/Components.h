@@ -7,4 +7,5 @@
 #include "ColliderComponent.h"
 #include "TileComponent.h"
 #include "ProjectileComponent.h"
+#include "TrailComponent.h"
 #include "UILabel.h"

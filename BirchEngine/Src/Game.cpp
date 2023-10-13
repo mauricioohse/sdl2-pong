@@ -53,7 +53,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if (renderer)
 		{
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		}
 
 		isRunning = true;
@@ -104,6 +104,7 @@ auto& players(manager.getGroup(Game::GROUP_PLAYERS));
 auto& enemies(manager.getGroup(Game::GROUP_ENEMIES));
 auto& colliders(manager.getGroup(Game::GROUP_COLLIDERS));
 auto& projectiles(manager.getGroup(Game::GROUP_PROJECTILES));
+auto& remainingSprites(manager.getGroup(Game::GROUP_SPRITES));
 
 
 void Game::handleEvents()
@@ -148,18 +149,10 @@ void Game::update() // currently doing things here to test, but the scripts will
 	manager.update();	// run every entity's update function
 	manager.refresh();	// remove all entities that are not active
 
-	for (auto& c : colliders)
-	{
-		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
-		if (Collision::AABB(cCol, playerCol))
-		{
-			player.getComponent<TransformComponent>().position = playerPos;
-		}
-	}
-
 	// projectile logic
 	for (auto& p : projectiles)
 	{
+		// check if the projectile has collider component
 		if (Collision::AABB(player.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))
 		{
 			p->getComponent<ProjectileComponent>().DoHorizontalCollision(player.getComponent<TransformComponent>().position.y);
@@ -183,6 +176,13 @@ void Game::update() // currently doing things here to test, but the scripts will
 			enemy.getComponent<TransformComponent>().velocity.y = -.8;
 		else
 			enemy.getComponent<TransformComponent>().velocity.y = 0;
+
+
+		// create trail after x frames
+		if (cnt%2 == 1)
+		{
+			Game::assets->CreateTrail(p->getComponent<TransformComponent>().position, 30, "ball");
+		}
 
 	}
 
@@ -242,6 +242,11 @@ void Game::render()
 	for (auto& e : enemies)
 	{
 		e->draw();
+	}
+
+	for (auto& r : remainingSprites)
+	{
+		r->draw();
 	}
 
 	label.draw();
