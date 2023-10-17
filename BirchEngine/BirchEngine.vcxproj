@@ -72,8 +72,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>..\externals\SDL2\include;..\externals\SDL2_image-2.0.1\include;C:\Dev\sdl2-pong\externals\SDL2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\externals\SDL2\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\externals\SDL2\include;..\externals\SDL2_image-2.0.1\include;C:\Dev\sdl2-pong\externals\SDL2\include;C:\Dev\sdl2-pong\externals\SDL2_mixer-2.6.3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\externals\SDL2\lib\x86;C:\Dev\sdl2-pong\externals\SDL2_mixer-2.6.3\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
@@ -102,7 +102,7 @@
     <Link>
       <AdditionalLibraryDirectories>..\externals\SDL2_image-2.0.1\lib\x86;..\externals\SDL2\lib\x86;..\externals\SDL2_ttf\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>SDL2_image.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2_image.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

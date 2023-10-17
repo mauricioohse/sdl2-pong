@@ -31,6 +31,9 @@ int Game::enemyPoints = 0;
 
 AssetManager* Game::assets = new AssetManager(&manager);
 
+// sounds
+Mix_Music* Game::gMusic = NULL;
+Mix_Chunk* Game::gHit = NULL;
 
 Game::Game()
 {}
@@ -57,6 +60,12 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 		}
 
 		isRunning = true;
+	}
+
+	//Initialize SDL_mixer
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
 
 	if (TTF_Init() == -1)
@@ -97,6 +106,22 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 
 	assets->CreateProjectiles(Vector2D(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), Vector2D(-1, 0.2), 0, 2, "ball");
 
+	//load sounds
+	gMusic = Mix_LoadMUS("21_sound_effects_and_music/beat.wav");
+	if (gMusic == NULL)
+	{
+		printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+
+	gHit = Mix_LoadWAV("assets/hit.wav");
+	if (gHit == NULL)
+	{
+		printf("Failed to load pop sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+
+
+
+	Mix_PlayChannel(-1, gHit, 0);
 }
 
 // list of entities per group
@@ -156,11 +181,13 @@ void Game::update() // currently doing things here to test, but the scripts will
 		if (Collision::AABB(player.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))
 		{
 			p->getComponent<ProjectileComponent>().DoHorizontalCollision(player.getComponent<TransformComponent>().position.y);
+			Mix_PlayChannel(-1, gHit, 0);
 		}
 
 		if (Collision::AABB(enemy.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider))
 		{
 			p->getComponent<ProjectileComponent>().DoHorizontalCollision(enemy.getComponent<TransformComponent>().position.y);
+			Mix_PlayChannel(-1, gHit, 0);
 		}
 
 		// enemy follow the ball logic

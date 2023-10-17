@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_mixer.h"
 #include <iostream>
 #include <vector>
 #include "Types.h"
@@ -32,6 +33,9 @@ public:
 	static int playerPoints;
 	static int enemyPoints;
 
+
+	static Mix_Music* gMusic;
+	static Mix_Chunk* gHit;
 	enum groupLabels : std::size_t
 	{
 		GROUP_MAP,
