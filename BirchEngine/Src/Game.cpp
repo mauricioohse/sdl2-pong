@@ -1,14 +1,10 @@
 #include "Game.h"
 #include "TextureManager.h"
-#include "map.h"
 #include "ECS/Components.h"
 #include "Vector2D.h"
 #include "Collision.h"
 #include "AssetManager.h"
 #include <sstream>
-
-
-Map* map;
 
 SDL_Renderer* Game::renderer = nullptr;
 
@@ -73,6 +69,23 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 		std::cout << "Error : SDL_TTF" << std::endl;
 	}
 
+	//load sounds
+	gMusic = Mix_LoadMUS("21_sound_effects_and_music/beat.wav");
+	if (gMusic == NULL)
+	{
+		printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+
+	gHit = Mix_LoadWAV("assets/hit.wav");
+	if (gHit == NULL)
+	{
+		printf("Failed to load pop sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+
+	Mix_PlayChannel(-1, gHit, 0);
+
+	// from here onward, seems to be game scene 
+
 	// these are the assets that can be loaded by their string id
 	assets->AddTexture("terrain", "assets/terrain_ss.png");
 	assets->AddTexture("enemy", "assets/terrain_ss.png");
@@ -80,12 +93,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 	assets->AddFont("arial", "assets/arial.ttf", 16);
 	assets->AddTexture("ball", "assets/fireball.png");
 
-	map = new Map("terrain", 3, 32);
-
 	// ecs implementation
-
-	//map->LoadMap("assets/map.map", 25, 20);
-
 	player.addComponent<TransformComponent>(0, SCREEN_HEIGHT/2 - PADDLE_HEIGHT, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_SCALE);
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<KeyboardController>();
@@ -106,22 +114,6 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 
 	assets->CreateProjectiles(Vector2D(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), Vector2D(-1, 0.2), 0, 2, "ball");
 
-	//load sounds
-	gMusic = Mix_LoadMUS("21_sound_effects_and_music/beat.wav");
-	if (gMusic == NULL)
-	{
-		printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
-	}
-
-	gHit = Mix_LoadWAV("assets/hit.wav");
-	if (gHit == NULL)
-	{
-		printf("Failed to load pop sound effect! SDL_mixer Error: %s\n", Mix_GetError());
-	}
-
-
-
-	Mix_PlayChannel(-1, gHit, 0);
 }
 
 // list of entities per group
